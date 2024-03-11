@@ -1,0 +1,6 @@
+remote
+sync
+.Trash-1000
+secrets/
+.env
+._*

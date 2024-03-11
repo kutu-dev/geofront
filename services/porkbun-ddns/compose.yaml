@@ -1,0 +1,17 @@
+version: "3.3"
+
+services:
+  porkbun-ddns:
+    image: ghcr.io/jadolg/porkbun-ddns
+    container_name: porkbun-ddns
+    restart: unless-stopped
+    user: "1"
+    volumes:
+      - ./config.yaml:/config.yaml:ro
+    networks:
+      - proxy
+
+networks:
+  proxy:
+    name: proxy
+    external: true

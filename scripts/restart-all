@@ -1,0 +1,21 @@
+#!/usr/bin/env bash
+
+error_printf() {
+	printf "%s\n" "$(tput bold)[ $(tput setaf 1)ERROR$(tput sgr0) ]$(tput sgr0) $1"
+}
+
+if [ "$(id -u)" -ne 0 ]; then
+	error_printf "Please run this script as superuser"
+	exit 1
+fi
+
+SERVICES_PATH=/srv/services
+
+echo "Starting Docker Compose services in '$SERVICES_PATH'"
+
+for service in "$SERVICES_PATH"/*; do
+	cd "$service" || { echo "Can not enter into '$service'" && continue; }
+	docker compose down && docker compose up -d
+done
+
+echo "Docker Compose services started"

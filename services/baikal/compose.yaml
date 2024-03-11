@@ -1,0 +1,65 @@
+version: "3"
+
+services:
+  baikal:
+    image: ckulka/baikal
+    restart: unless-stopped
+    user: "0"
+    expose:
+      - 80
+    volumes:
+      - /srv/sync/baikal/config:/var/www/baikal/config
+      - /srv/sync/baikal/Specific:/var/www/baikal/Specific
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+
+      - traefik.http.routers.baikal-homepage.rule=Host("baikal.v.dobon.dev")
+
+      - traefik.http.routers.baikal-homepage.tls=true
+      - traefik.http.routers.baikal-homepage.tls.certresolver=le
+      - traefik.http.routers.baikal-homepage.tls.domains[0].main=v.dobon.dev
+      - traefik.http.routers.baikal-homepage.tls.domains[0].sans=*.v.dobon.dev
+
+      - traefik.http.routers.baikal-admin.rule=Host("baikal.v.dobon.dev") && PathPrefix("/admin")
+
+      - traefik.http.routers.baikal-admin.tls=true
+      - traefik.http.routers.baikal-admin.tls.certresolver=le
+      - traefik.http.routers.baikal-admin.tls.domains[0].main=v.dobon.dev
+      - traefik.http.routers.baikal-admin.tls.domains[0].sans=*.v.dobon.dev
+
+      - traefik.http.routers.baikal-admin.middlewares=authelia
+
+    depends_on:
+      - baikal-mariadb
+
+  baikal-mariadb:
+    image: mariadb
+    restart: unless-stopped
+    user: "0"
+    expose:
+      - 3306
+    volumes:
+      - /srv/sync/baikal/database:/var/lib/mysql
+    networks:
+      - proxy
+    environment:
+      - MARIADB_DATABASE=webdav
+      - MARIADB_USER=baikal
+      - MARIADB_PASSWORD_FILE=/run/secrets/mariadb_password
+      - MARIADB_ROOT_PASSWORD_FILE=/run/secrets/mariadb_root_password
+    secrets:
+      - mariadb_password
+      - mariadb_root_password
+
+networks:
+  proxy:
+    name: proxy
+    external: true
+
+secrets:
+  mariadb_password:
+    file: ./secrets/mariadb_password.txt
+  mariadb_root_password:
+    file: ./secrets/mariadb_root_password.txt

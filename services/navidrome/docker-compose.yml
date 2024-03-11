@@ -1,0 +1,41 @@
+version: "3"
+
+services:
+  navidrome:
+    image: deluan/navidrome
+    restart: unless-stopped
+    user: "0"
+    expose:
+      - 4533
+    volumes:
+      - ./navidrome.toml:/data/navidrome.toml:ro
+      - /srv/remote/navidrome:/music:ro
+      - /srv/sync/navidrome:/data
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+
+      - traefik.http.routers.navidrome-protected.rule=Host("navidrome.v.dobon.dev")
+
+      - traefik.http.routers.navidrome-protected.tls=true
+      - traefik.http.routers.navidrome-protected.tls.certresolver=le
+      - traefik.http.routers.navidrome-protected.tls.domains[0].main=v.dobon.dev
+      - traefik.http.routers.navidrome-protected.tls.domains[0].sans=*.v.dobon.dev
+
+      - traefik.http.routers.navidrome-protected.middlewares=authelia
+
+      - traefik.http.routers.navidrome-public.rule=(Host("navidrome.v.dobon.dev") && PathPrefix("/share")) || (Host("navidrome.v.dobon.dev") && PathPrefix("/rest"))
+
+      - traefik.http.routers.navidrome-public.tls=true
+      - traefik.http.routers.navidrome-public.tls.certresolver=le
+      - traefik.http.routers.navidrome-public.tls.domains[0].main=v.dobon.dev
+      - traefik.http.routers.navidrome-public.tls.domains[0].sans=*.v.dobon.dev
+    environment:
+      - ND_CONFIGFILE=/data/navidrome.toml
+      - ND_PASSWORDENCRYPTIONKEY={$ND_PASSWORDENCRYPTIONKEY}
+
+networks:
+  proxy:
+    name: proxy
+    external: true

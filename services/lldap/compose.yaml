@@ -1,0 +1,66 @@
+version: "3"
+
+services:
+  lldap:
+    image: lldap/lldap:stable
+    container_name: lldap
+    restart: unless-stopped
+    user: "0"
+    expose:
+      - 3890
+      - 17170
+    volumes:
+      - "./lldap_data:/data"
+    networks:
+      - proxy
+    labels:
+      - traefik.enable=true
+      - traefik.http.services.lldap.loadbalancer.server.port=17170
+      - traefik.http.routers.lldap.rule=Host("lldap.v.dobon.dev")
+
+      - traefik.http.routers.lldap.tls=true
+      - traefik.http.routers.lldap.tls.certresolver=le
+      - traefik.http.routers.lldap.tls.domains[0].main=v.dobon.dev
+      - traefik.http.routers.lldap.tls.domains[0].sans=*.v.dobon.dev
+
+      - traefik.http.routers.lldap.middlewares=authelia
+    environment:
+      - UID=0
+      - GID=0
+      - TZ=Europe/Madrid
+      - LLDAP_JWT_SECRET_FILE=/run/secrets/lldap_jwt_secret
+      - LLDAP_LDAP_USER_PASS_FILE=/run/secrets/lldap_ldap_user_pass
+      - LLDAP_LDAP_BASE_DN=dc=dobon,dc=dev
+      - LLDAP_DATABASE_URL=postgres://lldap:${POSTGRES_PASSWORD}@postgres-lldap/ldap-db
+    secrets:
+      - lldap_jwt_secret
+      - lldap_ldap_user_pass
+    depends_on:
+      - postgres-lldap
+
+  postgres-lldap:
+    image: postgres
+    restart: unless-stopped
+    user: "0"
+    expose:
+      - 5432
+    volumes:
+      - /srv/sync/lldap/postgres:/var/lib/postgresql/data
+    networks:
+      - proxy
+    environment:
+      - POSTGRES_USER=lldap
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - POSTGRES_DB=ldap-db
+
+secrets:
+  lldap_jwt_secret:
+    file: ./secrets/lldap_jwt_secret.txt
+  lldap_ldap_user_pass:
+    file: ./secrets/lldap_ldap_user_pass.txt
+
+networks:
+  authelia:
+  proxy:
+    name: proxy
+    external: true
