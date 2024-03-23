@@ -9,9 +9,9 @@ services:
     volumes:
       - ./config.yaml:/config.yaml:ro
     networks:
-      - proxy
+      - shared
 
 networks:
-  proxy:
-    name: proxy
+  shared:
+    name: shared
     external: true

@@ -1,7 +1,7 @@
 version: "3.5"
 
 services:
-  velocity-proxy:
+  velocity-shared:
     image: itzg/bungeecord
     container_name: velocity
     restart: unless-stopped
@@ -11,7 +11,7 @@ services:
     volumes:
       - /srv/sync/rei/velocity:/server
     networks:
-      - proxy
+      - shared
     environment:
       - TYPE=VELOCITY
     healthcheck:
@@ -26,7 +26,7 @@ services:
     volumes:
       - /srv/sync/rei/luckperms:/var/lib/postgresql
     networks:
-      - proxy
+      - shared
     environment:
       - POSTGRES_USER=${LUCKPERMS_POSTGRES_USER}
       - POSTGRES_PASSWORD_FILE=/run/secrets/luckperms_postgres_password
@@ -43,7 +43,7 @@ services:
     volumes:
       - /srv/sync/rei/servers/borealis:/data
     networks:
-      - proxy
+      - shared
     environment:
       - TYPE=FABRIC
       - VERSION=1.20.2
@@ -67,6 +67,6 @@ secrets:
     file: ./secrets/luckperms_postgres_password.txt
 
 networks:
-  proxy:
-    name: proxy
+  shared:
+    name: shared
     external: true

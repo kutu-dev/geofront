@@ -1,6 +1,2 @@
-ReverseProxyWhitelist="172.17.0.0/12"
-Spotify.ID="bcf6ff2f461744a785309091aa363e4b"
-Spotify.Secret="2496cb044dc344c19892311f2adcc7db"
-LastFM.ApiKey="8dbf78f5d5ff23395822cde36bd259d4"
-LastFM.Secret="6e04e70501f247d19f9af67952782103"
+ReverseProxyWhitelist="10.8.1.0/24"
 EnableSharing=true

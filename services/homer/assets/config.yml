@@ -51,6 +51,14 @@ services:
         url: "https://jellyfin.dobon.dev"
         target: "_blank"
 
+      - name: "Navidrome"
+        logo: "assets/tools/navidrome.svg"
+        subtitle: "Music streaming center"
+        tag: "verified"
+        tagstyle: "is-info"
+        url: "https://navidrome.dobon.dev"
+        target: "_blank"
+
       - name: "Cobalt"
         logo: "assets/tools/cobalt.png"
         subtitle: "Universal media downloader"

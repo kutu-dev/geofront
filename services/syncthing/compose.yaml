@@ -14,7 +14,7 @@ services:
     volumes:
       - /srv/sync/syncthing:/var/syncthing
     networks:
-      - proxy
+      - shared
     labels:
       - traefik.enable=true
       - traefik.http.services.syncthing.loadbalancer.server.port=8384
@@ -32,6 +32,6 @@ services:
       - PGID=0
 
 networks:
-  proxy:
-    name: proxy
+  shared:
+    name: shared
     external: true

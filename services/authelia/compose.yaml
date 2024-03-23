@@ -10,7 +10,7 @@ services:
     volumes:
       - ./config:/config:ro
     networks:
-      - proxy
+      - shared
     labels:
       - traefik.enable=true
       - traefik.http.routers.authelia.rule=Host("authelia.dobon.dev")
@@ -53,7 +53,7 @@ services:
     volumes:
       - /srv/sync/authelia/postgres:/var/lib/postgresql/data
     networks:
-      - proxy
+      - shared
     environment:
       - POSTGRES_USER=authelia
       - POSTGRES_PASSWORD_FILE=/run/secrets/storage_postgres_password
@@ -76,7 +76,7 @@ services:
     volumes:
       - /srv/sync/authelia/redis:/data
     networks:
-      - proxy
+      - shared
     environment:
       - TZ=Europe/Madrid
       - REDIS_PASSWORD_FILE=/run/secrets/authelia_session_redis_password
@@ -84,8 +84,8 @@ services:
       - authelia_session_redis_password
 
 networks:
-  proxy:
-    name: proxy
+  shared:
+    name: shared
     external: true
 
 secrets:

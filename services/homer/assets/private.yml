@@ -54,9 +54,9 @@ services:
       - name: "Navidrome"
         logo: "assets/tools/navidrome.svg"
         subtitle: "Music streaming center"
-        tag: "vpn"
-        tagstyle: "is-danger"
-        url: "https://navidrome.v.dobon.dev"
+        tag: "verified"
+        tagstyle: "is-info"
+        url: "https://navidrome.dobon.dev"
         target: "_blank"
 
       - name: "Vikunja"

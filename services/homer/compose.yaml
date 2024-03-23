@@ -10,7 +10,7 @@ services:
     volumes:
       - ./assets/:/www/assets:ro
     networks:
-      - proxy
+      - shared
     labels:
       - traefik.enable=true
       - traefik.http.routers.homer.rule=Host("home.dobon.dev")
@@ -21,6 +21,6 @@ services:
       - traefik.http.routers.homer.tls.domains[0].sans=*.dobon.dev
 
 networks:
-  proxy:
-    name: proxy
+  shared:
+    name: shared
     external: true

@@ -12,30 +12,34 @@ services:
       - /srv/remote/navidrome:/music:ro
       - /srv/sync/navidrome:/data
     networks:
-      - proxy
+      - shared
     labels:
       - traefik.enable=true
 
-      - traefik.http.routers.navidrome-protected.rule=Host("navidrome.v.dobon.dev")
+      - traefik.http.routers.navidrome-protected.rule=Host("navidrome.dobon.dev")
 
       - traefik.http.routers.navidrome-protected.tls=true
       - traefik.http.routers.navidrome-protected.tls.certresolver=le
-      - traefik.http.routers.navidrome-protected.tls.domains[0].main=v.dobon.dev
-      - traefik.http.routers.navidrome-protected.tls.domains[0].sans=*.v.dobon.dev
+      - traefik.http.routers.navidrome-protected.tls.domains[0].main=dobon.dev
+      - traefik.http.routers.navidrome-protected.tls.domains[0].sans=*.dobon.dev
 
       - traefik.http.routers.navidrome-protected.middlewares=authelia
 
-      - traefik.http.routers.navidrome-public.rule=(Host("navidrome.v.dobon.dev") && PathPrefix("/share")) || (Host("navidrome.v.dobon.dev") && PathPrefix("/rest"))
+      - traefik.http.routers.navidrome-public.rule=(Host("navidrome.dobon.dev") && PathPrefix("/share")) || (Host("navidrome.dobon.dev") && PathPrefix("/rest"))
 
       - traefik.http.routers.navidrome-public.tls=true
       - traefik.http.routers.navidrome-public.tls.certresolver=le
-      - traefik.http.routers.navidrome-public.tls.domains[0].main=v.dobon.dev
-      - traefik.http.routers.navidrome-public.tls.domains[0].sans=*.v.dobon.dev
+      - traefik.http.routers.navidrome-public.tls.domains[0].main=dobon.dev
+      - traefik.http.routers.navidrome-public.tls.domains[0].sans=*.dobon.dev
     environment:
       - ND_CONFIGFILE=/data/navidrome.toml
       - ND_PASSWORDENCRYPTIONKEY={$ND_PASSWORDENCRYPTIONKEY}
+      - ND_SPOTIFY_ID={$ND_SPOTIFY_ID}
+      - ND_SPOTIFY_SECRET={$ND_SPOTIFY_SECRET}
+      - ND_LASTFM_APIKEY={$ND_LASTFM_APIKEY}
+      - ND_LASTFM_SECRET={$ND_LASTFM_SECRET}
 
 networks:
-  proxy:
-    name: proxy
+  shared:
+    name: shared
     external: true

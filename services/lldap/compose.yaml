@@ -12,7 +12,7 @@ services:
     volumes:
       - "./lldap_data:/data"
     networks:
-      - proxy
+      - shared
     labels:
       - traefik.enable=true
       - traefik.http.services.lldap.loadbalancer.server.port=17170
@@ -47,7 +47,7 @@ services:
     volumes:
       - /srv/sync/lldap/postgres:/var/lib/postgresql/data
     networks:
-      - proxy
+      - shared
     environment:
       - POSTGRES_USER=lldap
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
@@ -61,6 +61,6 @@ secrets:
 
 networks:
   authelia:
-  proxy:
-    name: proxy
+  shared:
+    name: shared
     external: true

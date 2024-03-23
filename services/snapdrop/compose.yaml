@@ -14,7 +14,7 @@ services:
       - PGID=0
       - TZ=Europe/Madrid
     networks:
-      - proxy
+      - shared
     labels:
       - traefik.enable=true
       - traefik.http.routers.snapdrop.rule=Host("snapdrop.dobon.dev")
@@ -25,6 +25,6 @@ services:
       - traefik.http.routers.snapdrop.tls.domains[0].sans=*.dobon.dev
 
 networks:
-  proxy:
-    name: proxy
+  shared:
+    name: shared
     external: true

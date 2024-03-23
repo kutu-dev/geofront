@@ -47,12 +47,10 @@ notifier:
 access_control:
   default_policy: deny
   rules:
-    - domain: uptime.dobon.dev
-      resources:
-        - "/assets"
-        - "/api"
-        - "/upload"
-      policy: bypass
+    - domain:
+        - navidrome.dobon.dev
+      policy: two_factor
+
     - domain:
         - traefik.v.dobon.dev
         - pihole.v.dobon.dev
@@ -61,7 +59,7 @@ access_control:
         - prometheus.v.dobon.dev
         - syncthing.v.dobon.dev
         - baikal.v.dobon.dev
-        - navidrome.v.dobon.dev
+        - wireguard.v.dobon.dev
       policy: two_factor
       subject:
         - ["group:vpn"]

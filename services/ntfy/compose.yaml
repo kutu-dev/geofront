@@ -14,7 +14,7 @@ services:
       - /srv/sync/ntfy/user.db:/var/lib/ntfy/user.db
       - /srv/sync/ntfy/cache:/var/cache/ntfy
     networks:
-      - proxy
+      - shared
     labels:
       - traefik.enable=true
       - traefik.http.routers.ntfy.rule=Host("ntfy.v.dobon.dev")
@@ -29,6 +29,6 @@ services:
       - WEB_PUSH_PRIVATE_KEY={$WEB_PUSH_PRIVATE_KEY}
 
 networks:
-  proxy:
-    name: proxy
+  shared:
+    name: shared
     external: true

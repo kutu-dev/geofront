@@ -7,8 +7,8 @@ services:
     restart: unless-stopped
     userns_mode: host
     ports:
-      - "80:80"
-      - "443:443"
+      - 80:80
+      - 443:443
     expose:
       - 8080
     volumes:
@@ -17,7 +17,8 @@ services:
       - /srv/sync/traefik/acme.json:/acme.json
       - /var/run/docker.sock:/var/run/docker.sock
     networks:
-      - proxy
+      shared:
+        ipv4_address: 10.8.1.3
     labels:
       - traefik.enable=true
       - traefik.http.routers.traefik.rule=Host("traefik.v.dobon.dev")
@@ -38,6 +39,6 @@ services:
       - PORKBUN_SECRET_API_KEY_FILE=/secrets/porkbun_secret_api_key.txt
 
 networks:
-  proxy:
-    name: proxy
+  shared:
+    name: shared
     external: true

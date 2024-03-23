@@ -22,3 +22,5 @@
   exposedByDefault = false
 
 [api]
+  dashboard = true
+  insecure = true

@@ -11,7 +11,7 @@ services:
       - /srv/sync/baikal/config:/var/www/baikal/config
       - /srv/sync/baikal/Specific:/var/www/baikal/Specific
     networks:
-      - proxy
+      - shared
     labels:
       - traefik.enable=true
 
@@ -43,7 +43,7 @@ services:
     volumes:
       - /srv/sync/baikal/database:/var/lib/mysql
     networks:
-      - proxy
+      - shared
     environment:
       - MARIADB_DATABASE=webdav
       - MARIADB_USER=baikal
@@ -54,8 +54,8 @@ services:
       - mariadb_root_password
 
 networks:
-  proxy:
-    name: proxy
+  shared:
+    name: shared
     external: true
 
 secrets:

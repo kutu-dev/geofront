@@ -12,7 +12,7 @@ services:
       - /srv/sync/grafana/data:/var/lib/grafana
       - /srv/sync/grafana/logs:/var/log/grafana
     networks:
-      - proxy
+      - shared
     labels:
       - traefik.enable=true
       - traefik.http.routers.grafana.rule=Host("grafana.v.dobon.dev")
@@ -34,7 +34,7 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
       - /srv/sync/prometheus:/prometheus
     networks:
-      - proxy
+      - shared
     labels:
       - traefik.enable=true
       - traefik.http.routers.prometheus.rule=Host("prometheus.v.dobon.dev")
@@ -68,7 +68,7 @@ services:
       - /var/lib/docker/:/var/lib/docker:ro
       - /dev/disk/:/dev/disk:ro
     networks:
-      - proxy
+      - shared
 
   node-exporter:
     image: quay.io/prometheus/node-exporter
@@ -83,7 +83,7 @@ services:
       - /etc/hostname:/etc/nodename
       - /srv/sync/node-exporter:/textfile:ro
     networks:
-      - proxy
+      - shared
 
   grafana-to-ntfy:
     image: kittyandrew/grafana-to-ntfy
@@ -91,7 +91,7 @@ services:
     expose:
       - 8080
     networks:
-      - proxy
+      - shared
     environment:
       - NTFY_URL=https://ntfy.v.dobon.dev/grafana
       - NTFY_BAUTH_USER=${NTFY_BAUTH_USER}
@@ -100,6 +100,6 @@ services:
       - BAUTH_PASS=${BAUTH_PASS}
 
 networks:
-  proxy:
-    name: proxy
+  shared:
+    name: shared
     external: true
